@@ -5,9 +5,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import javax.annotation.PostConstruct;
+import java.util.Set;
 
 @Controller
 public class UserController {
@@ -66,5 +70,16 @@ public class UserController {
     public String deleteUser(@PathVariable("id") long id) {
         userService.removeUser(id);
         return "redirect:/admin/users";
+    }
+
+    @PostConstruct
+    void create() {
+        Role roleAdmin = new Role("ADMIN");
+        Role roleUser = new Role("USER");
+        roleService.save(roleAdmin);
+        roleService.save(roleUser);
+        userService.addUser(new User("Thomas", "Angelo", "thomAng", "1234", Set.of(roleAdmin)));
+        userService.addUser(new User("Don", "Salieri", "don", "don", Set.of(roleUser)));
+        userService.addUser(new User("Paulie", "Lombardo", "paulie", "4321", Set.of(roleUser, roleAdmin)));
     }
 }
