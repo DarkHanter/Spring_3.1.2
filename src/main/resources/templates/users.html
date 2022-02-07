@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body>
+<div>
+    <h2>Users Table</h2>
+    <table th:border="1">
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Role</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        <tr th:each="msg : ${users}" >
+            <td th:text="${msg.id}">...</td>
+            <td th:text="${msg.firstName}">...</td>
+            <td th:text="${msg.lastName}">...</td>
+            <td th:text="${msg.username}">...</td>
+            <td th:text="${msg.password}">...</td>
+            <td th:text="${#strings.replace(#strings.replace(msg.roles, '[' ,''), ']', '')}">...</td>
+            <td><a th:href="@{/admin/users/edit/{id}(id=${msg.id})}">edit</a></td>
+            <td>
+                <form th:method="DELETE" th:action="@{/admin/users/{id}(id=${msg.id})}">
+                    <input type="submit" value="delete">
+                </form>
+            </td>
+        </tr>
+    </table>
+    <br>
+
+    <h2>Add User</h2>
+    <form th:method="POST" th:action="@{/admin/users}" th:object="${user}">
+        <table th:border="1">
+            <tr>
+                <td>First Name:</td>
+                <td><input type="text" th:field="*{firstName}"/></td>
+            </tr>
+            <tr>
+                <td>Last Name:</td>
+                <td><input type="text" th:field="*{lastName}"/></td>
+            </tr>
+            <tr>
+                <td>Username:</td>
+                <td><input type="text" th:field="*{username}"/></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type="text" th:field="*{password}"/></td>
+            </tr>
+            <tr>
+                <td>Choose Role:</td>
+                <td>
+                    <input th:each="role : ${roles}" type="checkbox" th:field="*{roles}" th:value="${role.id}" th:text="${role.role}"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" value="Add"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<br>
+<div>
+    <a th:href="@{/logout}">LOGOUT</a>
+</div>
+</body>
+</html>

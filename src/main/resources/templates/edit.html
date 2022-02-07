@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+</head>
+<body>
+<div>
+    <h2>Edit User</h2>
+    <form th:method="PATCH" th:action="@{/admin/users/edit}" th:object="${user}">
+        <table th:border="1">
+            <tr>
+                <td>ID:</td>
+                <td><input type="number" th:field="*{id}" readonly/></td>
+            </tr>
+            <tr>
+                <td>First Name:</td>
+                <td><input type="text" th:field="*{firstName}"/></td>
+            </tr>
+            <tr>
+                <td>Last Name:</td>
+                <td><input type="text" th:field="*{lastName}"/></td>
+            </tr>
+            <tr>
+                <td>Username:</td>
+                <td><input type="text" th:field="*{username}" readonly/></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type="text" th:field="*{password}" readonly/></td>
+            </tr>
+            <tr>
+                <td>Choose Role:</td>
+                <td>
+                    <input th:each="role : ${roles}" type="checkbox" th:field="*{roles}" th:value="${role.id}" th:text="${role.role}"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" value="Update"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<br>
+<div>
+    <a th:href="@{/logout}">LOGOUT</a>
+</div>
+</body>
+</html>
