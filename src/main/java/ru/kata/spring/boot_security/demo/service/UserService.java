@@ -10,4 +10,6 @@ public interface UserService {
     void removeUser(long id);
     User getUser(long id);
     List<User> getAllUsers();
+    boolean isUsernameAvailable(String name);
+    boolean isRoleAvailable(String name);
 }

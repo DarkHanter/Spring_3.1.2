@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>Admin</title>
 </head>
@@ -27,6 +27,14 @@
 <br>
 <div>
     <a th:href="@{/logout}">LOGOUT</a>
+</div>
+<br>
+<div sec:authorize="hasRole('USER')">
+    <a th:href="@{/user}">USER INFO PAGE</a>
+</div>
+<br>
+<div>
+    <a th:href="@{/admin/users}">USERS TABLE</a>
 </div>
 </body>
 </html>

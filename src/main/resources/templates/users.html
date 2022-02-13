@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -42,18 +42,22 @@
             <tr>
                 <td>First Name:</td>
                 <td><input type="text" th:field="*{firstName}"/></td>
+                <td th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Firstname Error</td>
             </tr>
             <tr>
                 <td>Last Name:</td>
                 <td><input type="text" th:field="*{lastName}"/></td>
+                <td th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Lastname Error</td>
             </tr>
             <tr>
                 <td>Username:</td>
                 <td><input type="text" th:field="*{username}"/></td>
+                <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</td>
             </tr>
             <tr>
                 <td>Password:</td>
                 <td><input type="text" th:field="*{password}"/></td>
+                <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</td>
             </tr>
             <tr>
                 <td>Choose Role:</td>
@@ -70,6 +74,13 @@
 <br>
 <div>
     <a th:href="@{/logout}">LOGOUT</a>
+</div>
+<br>
+<div sec:authorize="hasRole('ADMIN')">
+    <a th:href="@{/admin}">ADMIN INFO PAGE</a>
+</div>
+<div sec:authorize="hasRole('USER')">
+    <a th:href="@{/user}">USER INFO PAGE</a>
 </div>
 </body>
 </html>

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -11,6 +12,7 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.annotation.PostConstruct;
+import javax.validation.Valid;
 import java.util.Set;
 
 @Controller
@@ -47,12 +49,6 @@ public class UserController {
         return "users";
     }
 
-    @PostMapping(value = "/admin/users")
-    public String addUser(@ModelAttribute("user") User user) {
-        userService.addUser(user);
-        return "redirect:/admin/users";
-    }
-
     @GetMapping(value = "/admin/users/edit/{id}")
     public String editUserForm(ModelMap model, @PathVariable("id") long id) {
         model.addAttribute("user", userService.getUser(id));
@@ -72,14 +68,47 @@ public class UserController {
         return "redirect:/admin/users";
     }
 
+    @PostMapping(value = "/admin/users")
+    public String addUser(@ModelAttribute("user") @Valid User user,
+                          BindingResult bindingResult,
+                          ModelMap modelMap) {
+        if (bindingResult.hasErrors()) {
+            modelMap.addAttribute("users", userService.getAllUsers());
+            modelMap.addAttribute("roles", roleService.getAllRoles());
+            modelMap.addAttribute("user", user);
+            return "users";
+        }
+        checkUser(user);
+        return "redirect:/admin/users";
+    }
+
     @PostConstruct
     void create() {
         Role roleAdmin = new Role("ADMIN");
         Role roleUser = new Role("USER");
-        roleService.save(roleAdmin);
-        roleService.save(roleUser);
-        userService.addUser(new User("Thomas", "Angelo", "thomAng", "1234", Set.of(roleAdmin)));
-        userService.addUser(new User("Don", "Salieri", "don", "don", Set.of(roleUser)));
-        userService.addUser(new User("Paulie", "Lombardo", "paulie", "4321", Set.of(roleUser, roleAdmin)));
+        User user1 = new User("Thomas", "Angelo", "thomAng", "1234", Set.of(roleAdmin));
+        User user2 = new User("Don", "Salieri", "don", "don", Set.of(roleUser));
+        User user3 = new User("Paulie", "Lombardo", "paulie", "4321", Set.of(roleUser, roleAdmin));
+        checkRole(roleAdmin);
+        checkRole(roleUser);
+        checkUser(user1);
+        checkUser(user2);
+        checkUser(user3);
+    }
+
+    public void checkUser(User user) {
+        if(userService.isUsernameAvailable(user.getUsername())) {
+            userService.addUser(user);
+        } else {
+            System.out.println("User with username '" + user.getUsername() + "' existed");
+        }
+    }
+
+    public void checkRole(Role role) {
+        if(userService.isRoleAvailable(role.getRole())) {
+            roleService.save(role);
+        } else {
+            System.out.println("Role '" + role.getRole() +"' existed");
+        }
     }
 }
