@@ -18,21 +18,20 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "first_name")
-    @NotEmpty(message = "Enter the firstname")
+    //@NotEmpty(message = "Enter your firstname")
     private String firstName;
 
-
     @Column(name = "last_name")
-    @NotEmpty(message = "Enter the lastname")
+    //@NotEmpty(message = "Enter lastname")
     private String lastName;
 
     @Column(unique = true, name = "username")
     @UniqueUsername
-    @NotEmpty(message = "Enter username")
+    //@NotEmpty(message = "Enter username")
     private String username;
 
     @Column(name = "password")
-    @NotEmpty(message = "Enter password")
+    //@NotEmpty(message = "Enter password")
     private String password;
 
     public Set<Role> getRoles() {

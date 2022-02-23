@@ -12,6 +12,7 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Set;
 
@@ -63,8 +64,11 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/admin/users/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
+    public String deleteUser(@PathVariable("id") long id, @AuthenticationPrincipal User user, HttpSession httpSession) {
         userService.removeUser(id);
+        if(id == user.getId()) {
+            httpSession.invalidate();
+        }
         return "redirect:/admin/users";
     }
 

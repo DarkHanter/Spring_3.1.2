@@ -4,8 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
-</head>
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script></head>
 <body>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#checkBtn').click(function() {
+            checked = $("input[type=checkbox]:checked").length;
+
+            if(!checked) {
+                alert("You must check at least one checkbox.");
+                return false;
+            }
+
+        });
+    });
+
+</script>
+
 <div>
     <h2>Users Table</h2>
     <table th:border="1">
@@ -41,23 +60,32 @@
         <table th:border="1">
             <tr>
                 <td>First Name:</td>
-                <td><input type="text" th:field="*{firstName}"/></td>
-                <td th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Firstname Error</td>
+                <td><input type="text" th:field="*{firstName}" required placeholder="Enter First Name"
+                           oninvalid="this.setCustomValidity('Enter your First Name')"
+                           oninput="this.setCustomValidity('')"
+                /></td>
             </tr>
             <tr>
                 <td>Last Name:</td>
-                <td><input type="text" th:field="*{lastName}"/></td>
-                <td th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Lastname Error</td>
+                <td><input type="text" th:field="*{lastName}" required placeholder="Enter Last Name"
+                           oninvalid="this.setCustomValidity('Enter your Last Name')"
+                           oninput="this.setCustomValidity('')"
+                /></td>
             </tr>
             <tr>
                 <td>Username:</td>
-                <td><input type="text" th:field="*{username}"/></td>
+                <td><input type="text" th:field="*{username}" required placeholder="Enter username"
+                           oninvalid="this.setCustomValidity('Enter your username')"
+                           oninput="this.setCustomValidity('')"
+                /></td>
                 <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</td>
             </tr>
             <tr>
                 <td>Password:</td>
-                <td><input type="text" th:field="*{password}"/></td>
-                <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</td>
+                <td><input type="text" th:field="*{password}" required placeholder="Enter password"
+                           oninvalid="this.setCustomValidity('Enter password')"
+                           oninput="this.setCustomValidity('')"
+                /></td>
             </tr>
             <tr>
                 <td>Choose Role:</td>
@@ -66,7 +94,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><input type="submit" value="Add"></td>
+                <td colspan="2"><input type="submit" id="checkBtn" value="Add"></td>
             </tr>
         </table>
     </form>
