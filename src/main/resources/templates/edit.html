@@ -4,8 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit User</title>
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#checkBtn').click(function() {
+            checked = $("input[type=checkbox]:checked").length;
+
+            if(!checked) {
+                alert("You must check at least one checkbox");
+                return false;
+            }
+
+        });
+    });
+
+</script>
+
 <div>
     <h2>Edit User</h2>
     <form th:method="PATCH" th:action="@{/admin/users/edit}" th:object="${user}">
@@ -16,19 +36,32 @@
             </tr>
             <tr>
                 <td>First Name:</td>
-                <td><input type="text" th:field="*{firstName}"/></td>
+                <td><input type="text" th:field="*{firstName}" required placeholder="Enter First Name"
+                           oninvalid="this.setCustomValidity('First Name cannot be empty')"
+                           oninput="this.setCustomValidity('')"
+                /></td>
             </tr>
             <tr>
                 <td>Last Name:</td>
-                <td><input type="text" th:field="*{lastName}"/></td>
+                <td><input type="text" th:field="*{lastName}" required placeholder="Enter Last Name"
+                           oninvalid="this.setCustomValidity('Last Name cannot be empty')"
+                           oninput="this.setCustomValidity('')"
+                /></td>
             </tr>
             <tr>
                 <td>Username:</td>
-                <td><input type="text" th:field="*{username}"/></td>
+                <td><input type="text" th:field="*{username}" required placeholder="Enter username"
+                           oninvalid="this.setCustomValidity('Username cannot be empty')"
+                           oninput="this.setCustomValidity('')"
+                /></td>
+                <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</td>
             </tr>
             <tr>
                 <td>Password:</td>
-                <td><input type="text" th:field="*{password}"/></td>
+                <td><input type="text" th:field="*{password}" required placeholder="Enter password"
+                           oninvalid="this.setCustomValidity('Password cannot be empty')"
+                           oninput="this.setCustomValidity('')"
+                /></td>
             </tr>
             <tr>
                 <td>Choose Role:</td>
@@ -40,7 +73,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><input type="submit" value="Update"></td>
+                <td colspan="2"><input id="checkBtn" type="submit" value="Update"></td>
             </tr>
         </table>
     </form>

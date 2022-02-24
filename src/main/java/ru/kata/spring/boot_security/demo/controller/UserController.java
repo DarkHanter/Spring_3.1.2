@@ -14,6 +14,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Objects;
 import java.util.Set;
 
 @Controller
@@ -51,23 +52,21 @@ public class UserController {
     }
 
     @GetMapping(value = "/admin/users/edit/{id}")
-    public String editUserForm(ModelMap model, @PathVariable("id") long id) {
-        model.addAttribute("user", userService.getUser(id));
-        model.addAttribute("roles", roleService.getAllRoles());
+    public String editUserForm(ModelMap modelMap, @PathVariable("id") long id) {
+        modelMap.addAttribute("user", userService.getUser(id));
+        modelMap.addAttribute("roles", roleService.getAllRoles());
         return "edit";
     }
 
     @PatchMapping(value = "/admin/users/edit")
-    public String editUser(User user) {
-        userService.editUser(user);
-        return "redirect:/admin/users";
-    }
-
-    @DeleteMapping(value = "/admin/users/{id}")
-    public String deleteUser(@PathVariable("id") long id, @AuthenticationPrincipal User user, HttpSession httpSession) {
-        userService.removeUser(id);
-        if(id == user.getId()) {
-            httpSession.invalidate();
+    public String editUser(@Valid User user, BindingResult bindingResult, ModelMap modelMap) {
+        User user1 = userService.getUser(user.getId());
+        if (bindingResult.hasErrors() && !Objects.equals(user.getUsername(), user1.getUsername())) {
+            modelMap.addAttribute("user", user);
+            modelMap.addAttribute("roles", roleService.getAllRoles());
+            return "edit";
+        } else {
+            userService.editUser(user);
         }
         return "redirect:/admin/users";
     }
@@ -83,6 +82,15 @@ public class UserController {
             return "users";
         }
         checkUser(user);
+        return "redirect:/admin/users";
+    }
+
+    @DeleteMapping(value = "/admin/users/{id}")
+    public String deleteUser(@PathVariable("id") long id, @AuthenticationPrincipal User user, HttpSession httpSession) {
+        userService.removeUser(id);
+        if(id == user.getId()) {
+            httpSession.invalidate();
+        }
         return "redirect:/admin/users";
     }
 
